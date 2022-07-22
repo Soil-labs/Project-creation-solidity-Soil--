@@ -111,9 +111,9 @@ export default function Project () {
     return(
         <div style={{ margin: '20px' }}>
             
-            <header style={{ padding: '1rem' }}>
+            {/* <header style={{ padding: '1rem' }}>
                 <ConnectButton />
-            </header>
+            </header> */}
             <main
               style={{
                 minHeight: '60vh',
