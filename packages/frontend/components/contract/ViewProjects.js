@@ -78,7 +78,12 @@ export const ViewProjects = () => {
         return(
             <ul>
                 {projects.map((project) => {
-                    return(<li onClick={() => projectClickHandeler(project[0])}>{project[0]}</li>)
+                    return(
+                    <li onClick={() => projectClickHandeler(project[0])}>
+                      <button>
+                        {project[0]}
+                      </button>
+                    </li>)
                 })}
             </ul>
         )
