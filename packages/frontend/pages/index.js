@@ -1,9 +1,20 @@
 import Head from 'next/head';
-
+import { useNetwork } from 'wagmi'
+import { NETWORK_ID } from '../config';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { GetGreeter, SetGreeter, ViewProjects } from '../components/contract';
 
 export default function Home() {
+  const { chain, chains } = useNetwork()
+  if(chain && chain.id != Number(NETWORK_ID)){
+    return(
+      <>
+        <h1>Wrong ChainID </h1>
+        <h3>Please Shift to Chain: {Number(NETWORK_ID)}</h3>
+      </>
+      
+    )
+  }
   return (
     <div className={''}>
       <Head>
