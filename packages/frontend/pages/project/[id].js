@@ -141,9 +141,6 @@ export default function Project () {
           setError('please connect your wallet');
         }
       }, [signerData]);
-    // useEffect(() => {
-        
-    // }, [provider, greeterContract, fetchData]);
     if (error) {
         return <div>{error}</div>;
     }
@@ -272,12 +269,6 @@ export default function Project () {
                       onChange={(e) => setNewRoles(e.map((role) => role.value))}
                       
                     />
-                    {/* <input
-                    required
-                    value={roles}
-                    placeholder="Roles"
-                    onChange={(e) => setRoles(e.target.value)}
-                    /> */}
                     {!loading && <button style={{ marginLeft: '20px' }} type="submit">
                     submit
                     </button>}
