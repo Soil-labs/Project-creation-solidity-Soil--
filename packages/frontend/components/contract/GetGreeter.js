@@ -48,17 +48,6 @@ export const GetGreeter = () => {
   }, [greeterContract]);
 
 
-  // const getProjects = useCallback(async () => {
-  //   console.log("ikmm ")
-  //   let temp = []
-  //   for (let i = 0; i < numberOfProjects; i++) {
-  //     let project = await greeterContract.projects(address,i);
-  //     temp.push(project)
-  //   }
-  //   console.log(temp)
-  //   setProjects(temp)
-  // })
-
   useEffect(() => {
     if (signerData && address) {
       fetchData();
