@@ -13,8 +13,8 @@ contract ProjectFactory is Ownable {
     mapping(address => ProjectDesc[]) public projects;
     mapping(address => uint256) public numberOfProjects;
 
-    function createProject(address _champ, string calldata _projectName, string calldata _desc)public {
-        Project newProject = new Project(_champ, _projectName, _desc);
+    function createProject(address _champ, string calldata _projectName, string calldata _desc, string[] calldata _adminroles)public {
+        Project newProject = new Project(_champ, _projectName, _desc, _adminroles);
         projects[_champ].push(ProjectDesc(address(newProject), _champ, _projectName));
         numberOfProjects[_champ] += 1;
     }

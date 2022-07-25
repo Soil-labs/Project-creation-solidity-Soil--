@@ -6,6 +6,8 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import contracts from '../../contracts/hardhat_contracts.json';
 import { NETWORK_ID } from '../../config';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Select from 'react-select'
+
 
 export default function Project () {
     const chainId = Number(NETWORK_ID);
@@ -18,25 +20,32 @@ export default function Project () {
     const [revokeDev, setRevokeDev] = useState('');
     const [getDev, setGetDev] = useState('');
     const [showDev, setShowDev] = useState();
-    const [roles, setRoles] = useState('');
+    const [roles, setRoles] = useState([]);
+    const [chnageDev, setChangeDev] = useState('');
+    const [newRoles, setNewRoles] = useState([]);
+    const [projectName, setProjectName] = useState('');
+    const [projectDesc, setProjectDesc] = useState('');
+    const [projectChamp, setProjectChamp] = useState('');
     const router = useRouter()
     const address = router.query.id;
-    const greeterAddress = address? address : allContracts[chainId][0].contracts.Project.address;
-    const greeterABI = allContracts[chainId][0].contracts.Project.abi;
-    const greeterContract = useContract({
-        addressOrName: greeterAddress,
-        contractInterface: greeterABI,
+    const projectAddress = address? address : allContracts[chainId][0].contracts.Project.address;
+    const projectABI = allContracts[chainId][0].contracts.Project.abi;
+    const projectContract = useContract({
+        addressOrName: projectAddress,
+        contractInterface: projectABI,
         signerOrProvider: signerData,
       });
 
     const fetchData = async () => {
         try {
-          const _nameOfProject = await greeterContract.name();
-          const _owner = await greeterContract.owner();
+          const _nameOfProject = await projectContract.name();
+          const _owner = await projectContract.owner();
+          const _desc = await projectContract.desc();
           console.log(_nameOfProject)
-          console.log(address)
-          console.log(greeterAddress)
           console.log(_owner)
+          setProjectChamp(_owner);
+          setProjectDesc(_desc);
+          setProjectName(_nameOfProject);
         } catch (error) {
           console.log(error)
           setError("Contract couldn't be fetched.  Please check your network.");
@@ -48,10 +57,10 @@ export default function Project () {
         e.preventDefault();
         try {
         setLoading(true);
-        const tx = await greeterContract.addMember(addDev, roles);
+        const tx = await projectContract.addMember(addDev, roles);
         await tx.wait();
         setAddDev('');
-        setRoles('');
+        setRoles([]);
         setLoading(false);
         } catch (error) {
         console.log(error)
@@ -63,7 +72,7 @@ export default function Project () {
         e.preventDefault();
         try {
         setLoading(true);
-        const tx = await greeterContract.revokeMember(revokeDev);
+        const tx = await projectContract.revokeMember(revokeDev);
         await tx.wait();
         setRevokeDev('');
         setLoading(false);
@@ -73,15 +82,37 @@ export default function Project () {
         setLoading(false);
         }
     }
+    const handleChangeRole = async (e)  => {
+      e.preventDefault();
+      try {
+      setLoading(true);
+      const tx = await projectContract.changeRole(chnageDev, newRoles);
+      await tx.wait();
+      setChangeDev('');
+      setNewRoles([]);
+      setLoading(false);
+      } catch (error) {
+      console.log(error)
+      setError('txn failed, check contract');
+      setLoading(false);
+      }
+  }
     const handleGetDev = async (e)  => {
         e.preventDefault();
         try {
         setLoading(true);
         console.log(getDev)
-        const dev = await greeterContract.Members(getDev);
+        const dev = await projectContract.Members(getDev);
+        const devRoles = await projectContract.getRoles(getDev);
         //await tx.wait();
         console.log(dev)
-        setShowDev(dev);
+        console.log(devRoles)
+        let _ = {
+          member: dev.member,
+          roles: devRoles,
+          access: dev.access 
+        }
+        setShowDev(_);
         setGetDev('');
         setLoading(false);
         } catch (error) {
@@ -90,6 +121,14 @@ export default function Project () {
         setLoading(false);
         }
     }
+    const options = [
+      { value: 'frontend', label: 'FrontEnd' },
+      { value: 'backend', label: 'BackEnd' },
+      { value: 'blockchain', label: 'BlockChain' },
+      { value: 'ui/ux', label: 'UI/UX' },
+      { value: 'hr', label: 'HR' },
+      { value: 'devrel', label: 'DevRel' }
+    ]
     useEffect(() => {
         if (signerData) {
           setError('');
@@ -124,97 +163,163 @@ export default function Project () {
                 alignItems: 'center',
               }}
             >
-            <h5>Add Dev</h5>
-            <form style={{
-                flex: '1',
+            <h2>Name: {projectName}</h2>
+            <h3>Champ: {projectChamp}</h3>
+            <h4>Description: {projectDesc}</h4>
+            <div style={{
+                display: 'flex',
+                //flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }} >
+              <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }} onSubmit={(e) => handleAddMember(e)}>
-                <input
-                required
-                value={addDev}
-                placeholder="Developer's Address"
-                onChange={(e) => setAddDev(e.target.value)}
-                />
-                <input
-                required
-                value={roles}
-                placeholder="Roles"
-                onChange={(e) => setRoles(e.target.value)}
-                />
-                <button style={{ marginLeft: '20px' }} type="submit">
-                submit
-                </button>
-            </form>
-            {/* {/* <form onSubmit={(e) => handleSubmit(e)}>
-                <input
-                required
-                value={champAdd}
-                placeholder="Champ's Address"
-                onChange={(e) => setChampAdd(e.target.value)}
-                />
-                <input
-                required
-                value={projectName}
-                placeholder="Project Name"
-                onChange={(e) => setProjectName(e.target.value)}
-                />
-                <input
-                required
-                value={projectDesc}
-                placeholder="Project Desc"
-                onChange={(e) => setProjectDesc(e.target.value)}
-                />
-                <button style={{ marginLeft: '20px' }} type="submit">
-                submit
-                </button>
-            </form> */}
-            <h5>Revoke Dev</h5>
-            <form style={{
-                flex: '1',
+                paddingRight: '80px',
+              }}>
+              <h5>Add Dev</h5>
+                <form style={{
+                    flex: '1',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }} onSubmit={(e) => handleAddMember(e)}>
+                    <input
+                    required
+                    value={addDev}
+                    placeholder="Developer's Address"
+                    onChange={(e) => setAddDev(e.target.value)}
+                    />
+                    <Select
+                      defaultValue={[options[2]]}
+                      isMulti
+                      name="colors"
+                      options={options}
+                      className="basic-multi-select"
+                      classNamePrefix="select"
+                      onChange={(e) => setRoles(e.map((role) => role.value))} 
+                    />
+                    {!loading && <button style={{ marginLeft: '20px' }} type="submit">
+                    submit
+                    </button>}
+                </form>
+              </div>
+              <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }} onSubmit={(e) => handleRevoke(e)}>
-                <input
-                required
-                value={revokeDev}
-                placeholder="Developer's Address"
-                onChange={(e) => setRevokeDev(e.target.value)}
-                />
-                <button style={{ marginLeft: '20px' }} type="submit">
-                submit
-                </button>
-            </form>
-            <h5>Get Dev</h5>
-            <form style={{
-                flex: '1',
+                //paddingRight: '80px',
+              }}>
+              <h5>Revoke Dev</h5>
+                <form style={{
+                    flex: '1',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }} onSubmit={(e) => handleRevoke(e)}>
+                    <input
+                    required
+                    value={revokeDev}
+                    placeholder="Developer's Address"
+                    onChange={(e) => setRevokeDev(e.target.value)}
+                    />
+                    {!loading && <button style={{ marginLeft: '20px' }} type="submit">
+                    submit
+                    </button>}
+                </form>
+              </div>
+              
+            </div>
+            <div style={{
+                display: 'flex',
+                //flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }} onSubmit={(e) => handleGetDev(e)}>
-                <input
-                required
-                value={getDev}
-                placeholder="Developer's Address"
-                onChange={(e) => setGetDev(e.target.value)}
-                />
-                <button style={{ marginLeft: '20px' }} type="submit">
-                submit
-                </button>
-            </form>
-            {showDev && (
-                <>
-                    <h6>Address: {showDev.member}</h6>
-                    <h6>Role: {showDev.role}</h6>
-                    <h6>Access: {showDev.access? 'true':'False'}</h6>
-                </>
+                paddingRight: '80px',
+              }}>
+                <h5>Change Dev Role</h5>
+                <form style={{
+                    flex: '1',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }} onSubmit={(e) => handleChangeRole(e)}>
+                    <input
+                    required
+                    value={chnageDev}
+                    placeholder="Developer's Address"
+                    onChange={(e) => setChangeDev(e.target.value)}
+                    />
+                    <Select
+                      defaultValue={[options[2]]}
+                      isMulti
+                      name="colors"
+                      options={options}
+                      className="basic-multi-select"
+                      classNamePrefix="select"
+                      onChange={(e) => setNewRoles(e.map((role) => role.value))}
+                      
+                    />
+                    {/* <input
+                    required
+                    value={roles}
+                    placeholder="Roles"
+                    onChange={(e) => setRoles(e.target.value)}
+                    /> */}
+                    {!loading && <button style={{ marginLeft: '20px' }} type="submit">
+                    submit
+                    </button>}
+                </form>
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                //paddingRight: '80px',
+              }}>
+                <h5>Get Dev</h5>
+                <form style={{
+                    flex: '1',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }} onSubmit={(e) => handleGetDev(e)}>
+                    <input
+                    required
+                    value={getDev}
+                    placeholder="Developer's Address"
+                    onChange={(e) => setGetDev(e.target.value)}
+                    />
+                    {!loading && <button style={{ marginLeft: '20px' }} type="submit">
+                    submit
+                    </button>}
+                </form>
                 
-            )}
+                {showDev && (
+                    <>
+                        <h6>Address: {showDev.member}</h6>
+                        <h6>Role: {showDev.roles.map((role) => String(role) + " ")} </h6>
+                        <h6>Access: {showDev.access? 'true':'False'}</h6>
+                    </>
+                )}
+              </div>
+              
+            </div>
+            
           </main>
         </div>
     )

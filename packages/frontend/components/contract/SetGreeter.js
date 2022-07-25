@@ -3,11 +3,13 @@ import { useContract, useSigner } from 'wagmi';
 
 import contracts from '../../contracts/hardhat_contracts.json';
 import { NETWORK_ID } from '../../config';
+import Select from 'react-select'
 
 export const SetGreeter = () => {
   const chainId = Number(NETWORK_ID);
   const [projectName, setProjectName] = useState('');
   const [projectDesc, setProjectDesc] = useState('');
+  const [adminRoles, setAdminRoles] = useState([]);
   const [champAdd, setChampAdd] = useState(''); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -24,6 +26,15 @@ export const SetGreeter = () => {
     signerOrProvider: signerData,
   });
 
+  const options = [
+    { value: 'frontend', label: 'FrontEnd' },
+    { value: 'backend', label: 'BackEnd' },
+    { value: 'blockchain', label: 'BlockChain' },
+    { value: 'ui/ux', label: 'UI/UX' },
+    { value: 'hr', label: 'HR' },
+    { value: 'devrel', label: 'DevRel' }
+  ]
+
   useEffect(() => {
     if (signerData) {
       setError('');
@@ -38,11 +49,12 @@ export const SetGreeter = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const tx = await greeterContract.createProject(champAdd, projectName, projectDesc);
+      const tx = await greeterContract.createProject(champAdd, projectName, projectDesc, adminRoles);
       await tx.wait();
       setProjectName('');
       setProjectDesc('');
       setChampAdd('')
+      setAdminRoles([])
       setLoading(false);
     } catch (error) {
       console.log(error)
@@ -61,7 +73,14 @@ export const SetGreeter = () => {
 
   return (
     <div style={{ margin: '20px' }}>
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form style={{
+                    flex: '1',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+       onSubmit={(e) => handleSubmit(e)}>
       <input
           required
           value={champAdd}
@@ -80,6 +99,15 @@ export const SetGreeter = () => {
           placeholder="Project Desc"
           onChange={(e) => setProjectDesc(e.target.value)}
         />
+        <Select
+          defaultValue={[options[2]]}
+          isMulti
+          name="colors"
+          options={options}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          onChange={(e) => setAdminRoles(e.map((role) => role.value))}            
+          />
         <button style={{ marginLeft: '20px' }} type="submit">
           submit
         </button>
