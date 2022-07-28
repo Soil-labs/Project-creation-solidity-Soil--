@@ -81,7 +81,7 @@ export const ViewProjects = () => {
                     return(
                     <li onClick={() => projectClickHandeler(project[0])}>
                       <button>
-                        {project[0]}
+                        {project[1]}
                       </button>
                     </li>)
                 })}

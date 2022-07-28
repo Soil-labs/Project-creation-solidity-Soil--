@@ -8,6 +8,7 @@ contract Project is Ownable {
     uint256 public numberOfMembers;
     string public name;
     string public desc;
+    address[] public membersAddresses;
     struct Member {
         address member;
         string[] role;
@@ -21,6 +22,7 @@ contract Project is Ownable {
         numberOfMembers = 0;
         Members[_owner] = Member(_owner, _adminsrole, true);
         numberOfMembers += 1;
+        membersAddresses.push(_owner);
         emit NewMemberAdded(_owner, _adminsrole);
         name = _name;
         desc = _desc;
@@ -30,12 +32,13 @@ contract Project is Ownable {
         require(Members[_dev].member == address(0), "Member Alerady Exists");
         Members[_dev] = Member(_dev, _role, true);
         numberOfMembers += 1;
+        membersAddresses.push(_dev);
         emit NewMemberAdded(_dev, _role);
     }
 
     function revokeMember(address _dev) public onlyOwner {
+        require(_dev != owner(), "Champ cant be revoked");
         Members[_dev].access = false;
-        numberOfMembers -= 1;
         emit MemberRevoked(_dev);
     }
 

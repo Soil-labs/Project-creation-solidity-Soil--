@@ -5,7 +5,7 @@
       "chainId": "5",
       "contracts": {
         "ProjectFactory": {
-          "address": "0xa3bF627e80782c06C9ec0520C7F2546a9Af5CF70",
+          "address": "0xE6bdF9FDC27670BCA1871AA9b26DF0D0a4cEc9F8",
           "abi": [
             {
               "anonymous": false,
@@ -143,7 +143,7 @@
           ]
         },
         "Project": {
-          "address": "0xd9C582E5451319BA957B7820614C6986187c497d",
+          "address": "0x76390EC72D9302a5EBF6797f4461b915182fDa24",
           "abi": [
             {
               "inputs": [
@@ -309,6 +309,25 @@
                   "internalType": "string[]",
                   "name": "roles",
                   "type": "string[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "name": "membersAddresses",
+              "outputs": [
+                {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
                 }
               ],
               "stateMutability": "view",

@@ -3,8 +3,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { useContract, useProvider, useSigner } from 'wagmi';
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { InjectedConnector } from 'wagmi/connectors/injected';
-import contracts from '../../contracts/hardhat_contracts.json';
-import { NETWORK_ID } from '../../config';
+import contracts from '../../../contracts/hardhat_contracts.json';
+import { NETWORK_ID } from '../../../config';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Select from 'react-select'
 
@@ -163,6 +163,7 @@ export default function Project () {
             <h2>Name: {projectName}</h2>
             <h3>Champ: {projectChamp}</h3>
             <h4>Description: {projectDesc}</h4>
+            <button onClick={() => router.push('/project/' + projectAddress + '/desc')}>Details</button>
             <div style={{
                 display: 'flex',
                 //flexDirection: 'column',
@@ -191,7 +192,7 @@ export default function Project () {
                     onChange={(e) => setAddDev(e.target.value)}
                     />
                     <Select
-                      defaultValue={[options[2]]}
+                      defaultValue={[]}
                       isMulti
                       name="colors"
                       options={options}
@@ -260,9 +261,9 @@ export default function Project () {
                     onChange={(e) => setChangeDev(e.target.value)}
                     />
                     <Select
-                      defaultValue={[options[2]]}
+                      defaultValue={[]}
                       isMulti
-                      name="colors"
+                      name="Roles"
                       options={options}
                       className="basic-multi-select"
                       classNamePrefix="select"

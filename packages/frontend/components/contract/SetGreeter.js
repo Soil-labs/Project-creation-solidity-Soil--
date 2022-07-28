@@ -99,10 +99,10 @@ export const SetGreeter = () => {
           placeholder="Project Desc"
           onChange={(e) => setProjectDesc(e.target.value)}
         />
-        <Select
-          defaultValue={[options[2]]}
+        Admin Role: <Select
+          defaultValue={[]}
           isMulti
-          name="colors"
+          name="Admin role"
           options={options}
           className="basic-multi-select"
           classNamePrefix="select"
