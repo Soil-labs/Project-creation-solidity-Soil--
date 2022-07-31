@@ -15,8 +15,13 @@ contract Project is Ownable {
         bool access;
     }
     mapping(address => Member) public Members;
+    mapping(address => string[]) public tweets;
     event NewMemberAdded(address newMember, string[] role);
     event MemberRevoked(address member);
+    modifier onlyMembers {
+        require(Members[msg.sender].member != address(0), "This address is not registered");
+        _;
+    }
     constructor(address _owner,string memory _name, string memory _desc, string[] memory _adminsrole) {
         transferOwnership(_owner);
         numberOfMembers = 0;
@@ -34,6 +39,14 @@ contract Project is Ownable {
         numberOfMembers += 1;
         membersAddresses.push(_dev);
         emit NewMemberAdded(_dev, _role);
+    }
+
+    function tweetOnProject(string memory _tweet) public onlyMembers {
+        tweets[msg.sender].push(_tweet);
+    }
+
+    function getTweets(address _member) view public returns(string[] memory) {
+        return tweets[_member];
     }
 
     function revokeMember(address _dev) public onlyOwner {

@@ -37,10 +37,12 @@ const desc = () => {
             const _add = await projectContract.membersAddresses(i)
             const _member = await projectContract.Members(_add);
             const _roles = await projectContract.getRoles(_add);
+            const _tweets = await projectContract.getTweets(_add);
             temp.push({
               add: _add,
               access: _member.access,
-              roles: _roles
+              roles: _roles,
+              tweets: _tweets
             })
           }
           console.log(_nameOfProject)
@@ -98,8 +100,11 @@ const desc = () => {
                   if(member.access){
                   return(
                     <>
-                      <h5>{member.add}</h5>
+                      <h5>Member's Address: {member.add}</h5>
+                      <h6>Roles:</h6>
                       {member.roles.map((role) => <p>{role}</p>)}
+                      <h6>Tweets:</h6>
+                      {member.tweets.map((tweet) => <p>{tweet}</p>)}
                       <br></br>
                     </>
                     

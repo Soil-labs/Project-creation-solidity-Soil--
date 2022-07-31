@@ -23,6 +23,8 @@ export default function Project () {
     const [roles, setRoles] = useState([]);
     const [chnageDev, setChangeDev] = useState('');
     const [newRoles, setNewRoles] = useState([]);
+    const [tweet, setTweet] = useState('');
+    const [tweeter, setTweeter] = useState('');
     const [projectName, setProjectName] = useState('');
     const [projectDesc, setProjectDesc] = useState('');
     const [projectChamp, setProjectChamp] = useState('');
@@ -97,6 +99,21 @@ export default function Project () {
       setLoading(false);
       }
   }
+  const handelTweet = async (e)  => {
+    e.preventDefault();
+    try {
+    setLoading(true);
+    const tx = await projectContract.tweetOnProject(tweet);
+    await tx.wait();
+    setTweeter('');
+    setTweet('');
+    setLoading(false);
+    } catch (error) {
+    console.log(error)
+    setError('txn failed, check contract');
+    setLoading(false);
+    }
+}
     const handleGetDev = async (e)  => {
         e.preventDefault();
         try {
@@ -309,9 +326,25 @@ export default function Project () {
                     </>
                 )}
               </div>
-              
             </div>
-            
+            <form style={{
+                    flex: '1',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }} onSubmit={(e) => handelTweet(e)}>
+                    <h5>Tweet</h5>
+                    <input
+                    required
+                    value={tweet}
+                    placeholder="Update"
+                    onChange={(e) => setTweet(e.target.value)}
+                    />
+                    {!loading && <button style={{ marginLeft: '20px' }} type="submit">
+                    submit
+                    </button>}
+                </form>
           </main>
         </div>
     )
