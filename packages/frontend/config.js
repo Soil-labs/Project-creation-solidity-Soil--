@@ -1,2 +1,2 @@
-export const NETWORK_ID = 5;
-export const NETWORK_NAME = 'goerli';
+export const NETWORK_ID = 80001;
+export const NETWORK_NAME = 'mumbai';

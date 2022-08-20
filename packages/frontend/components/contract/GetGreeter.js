@@ -67,7 +67,7 @@ export const GetGreeter = () => {
 
   return (
     <div style={{ margin: '20px' }}>
-      <span>current greeting : {String(numberOfProjects)}</span>
+      <span>Number of Projects : {String(numberOfProjects)}</span>
       <button style={{ marginLeft: '20px' }} onClick={() => fetchData()}>
         refresh
       </button>

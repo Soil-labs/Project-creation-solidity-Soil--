@@ -4,7 +4,7 @@ require('dotenv').config({ path: '../../.env' });
 require('hardhat-deploy');
 require('@nomiclabs/hardhat-ethers');
 
-const defaultNetwork = 'goerli';
+const defaultNetwork = 'mumbai';
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -43,12 +43,12 @@ module.exports = {
     //   //url: `https://rinkeby.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
     //   accounts: [`${process.env.PRIVATE_KEY}`],
     // },
-    goerli: {
-      chainId: 5,
-      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-      //url: `https://goerli.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
-      accounts: [`${process.env.PRIVATE_KEY}`],
-    },
+    // goerli: {
+    //   chainId: 5,
+    //   url: `https://eth-goerli.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+    //   //url: `https://goerli.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
+    //   accounts: [`${process.env.PRIVATE_KEY}`],
+    // },
     // kovan: {
     //   chainId: 42,
     //   url: `https://eth-kovan.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
@@ -69,12 +69,12 @@ module.exports = {
 
     // L2 TEST NETWORKS
 
-    // mumbai: {
-    //   chainId: 80001,
-    //   url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-    //   url: `https://polygon-mumbai.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
-    //   accounts: [`${process.env.PRIVATE_KEY}`],
-    // },
+    mumbai: {
+      chainId: 80001,
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+      //url: `https://polygon-mumbai.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
   },
   namedAccounts: {
     deployer: {
